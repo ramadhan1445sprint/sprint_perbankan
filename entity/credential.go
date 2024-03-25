@@ -5,22 +5,19 @@ import (
 )
 
 type Credential struct {
-	Type     string `json:"credentialType"`
-	Value    string `json:"credentialValue"`
+	Email    string `json:"credentialType"`
 	Password string `json:"password"`
 }
 
 type JWTPayload struct {
 	Id    string
-	Type  string
-	Value string
+	Email string
 	Name  string
 }
 
 type JWTClaims struct {
 	Id    string
-	Type  string
-	Value string
+	Email string
 	Name  string
 	jwt.RegisteredClaims
 }

@@ -8,13 +8,12 @@ import (
 	"github.com/ramadhan1445sprint/sprint_segokuning/entity"
 )
 
-func GenerateToken(id, credType, credValue, name string) (string, error) {
+func GenerateToken(id, email, name string) (string, error) {
 	secret := config.GetString("JWT_SECRET")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, entity.JWTClaims{
 		Id:    id,
-		Type:  credType,
-		Value: credValue,
+		Email: email,
 		Name:  name,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(10 * time.Minute)),
@@ -42,8 +41,7 @@ func VerifyToken(token string) (*entity.JWTPayload, error) {
 
 	payload := &entity.JWTPayload{
 		Id:    claims.Id,
-		Type:  claims.Type,
-		Value: claims.Value,
+		Email: claims.Email,
 		Name:  claims.Name,
 	}
 
