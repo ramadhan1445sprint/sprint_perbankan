@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS users;
+
+DROP EXTENSION IF EXISTS "uuid-ossp";
+
+DROP INDEX IF EXISTS idx_email_phone CASCADE;
+
+DROP INDEX IF EXISTS idx_created_at_user CASCADE;
