@@ -1,0 +1,80 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfiles/backend/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # ⚠️ not a good production practice, because hacker can snoop the docker env within the docker container
+      # but we need it for our demonstration
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: ${DB_HOST}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PARAMS: ${DB_PARAMS}
+      JWT_SECRET: ${JWT_SECRET}
+      BCRYPT_SALT: ${BCRYPT_SALT}
+      S3_ID: ${S3_ID}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+      S3_REGION: ${S3_REGION}
+      ENV: ${ENV}
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      # • `./prometheus.yml` refers to `./prometheus.yml` that exists in current directory
+      # • `/etc/prometheus/prometheus.yml` refers to where `./prometheus.yml` will be placed inside the container
+      - prometheus_data:/prometheus
+      # • `prometheus_data` refers to `volumes.prometheus_data` used to make prometheus information presists each restart
+      # •  `/prometheus` refers to where should `volumes.grafana_data` will be placed inside the grafana container
+    command:
+      # tell the prometheus to use `/etc/prometheus/prometheus.yml`
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      # tell the prometheus to use `/prometheus` as the storage path
+      - "--storage.tsdb.path=/prometheus"
+      # tell prometheus to reload if we hit `http://localhost:9090/-/reload` to reload changes in `./prometheus.yml`
+      - "--web.enable-lifecycle"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # • `grafana_data` refers to `volumes.grafana_data` used to make grafana information presists each restart
+      # •  `/var/lib/grafana` refers to where should `volumes.grafana_data` will be placed inside the grafana container
+      - ./grafana-configs:/etc/grafana/provisioning:ro
+      # • `./grafana-configs` refers to `grafana-configs` folder in host, push the folder in the repository
+      #    to retain the config and keeping the panels that already created and deploy it everywhere
+      # • `/etc/grafana/provisioning` refers to where should `grafana-configs` will be placed inside the grafana container
+      # • `:ro` means "read only", this will prevent accidental edit from grafana itself, it's a good security practice
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_PASSWORD=root
+      - PGDATA=/var/lib/postgresql/data
+      - LANG=en_US.utf8
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    hostname: ${DB_HOST}
+    restart: no
+    labels:
+      - desktop.docker.io/wsl-distro=Ubuntu-20.04
+    command: ["postgres"]
+
+volumes:
+  prometheus_data:
+  grafana_data:

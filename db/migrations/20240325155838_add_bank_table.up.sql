@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   updated_at TIMESTAMP
 );
 
-CREATE INDEX IF NOT EXISTS idx_currency ON bank_accounts (currency)
+CREATE INDEX IF NOT EXISTS idx_currency ON bank_accounts (currency);
 
-CREATE INDEX IF NOT EXISTS idx_balance ON bank_accounts (total_balance)
+CREATE INDEX IF NOT EXISTS idx_balance ON bank_accounts (total_balance);

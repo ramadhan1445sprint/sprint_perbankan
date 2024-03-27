@@ -11,8 +11,8 @@ type ServerMetric struct {
 
 func NewServerMetric() *ServerMetric {
 	reqDurationHist := promauto.NewHistogramVec(prometheus.HistogramOpts{
-		Name: "segokuning_http_request_duration_seconds",
-		Help: "http request duration in seconds",
+		Name:    "perbankan_http_request_duration",
+		Help:    "Histogram of http request duration",
 		Buckets: prometheus.LinearBuckets(1, 1, 10),
 	}, []string{"method", "path", "status"})
 

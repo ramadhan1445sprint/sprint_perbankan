@@ -34,10 +34,10 @@ func RecordDuration(ctx *fiber.Ctx) error {
 		}
 	}
 
-	elapsedDuration := time.Since(start).Seconds()
+	elapsedDuration := time.Since(start).Milliseconds()
 
 	fmt.Println(method, path, statusCode, elapsedDuration)
-	sm.ReqDurationHist.WithLabelValues(method, path, statusCode).Observe(elapsedDuration)
+	sm.ReqDurationHist.WithLabelValues(method, path, statusCode).Observe(float64(elapsedDuration))
 
 	return err
 }
