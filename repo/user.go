@@ -1,8 +1,6 @@
 package repo
 
 import (
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/ramadhan1445sprint/sprint_segokuning/entity"
 )
@@ -26,7 +24,6 @@ func (r *userRepo) GetUser(email string) (*entity.User, error) {
 
 	err := r.db.Get(&user, query, email)
 	if err != nil {
-		fmt.Println("1", err)
 		return nil, err
 	}
 
@@ -41,7 +38,6 @@ func (r *userRepo) CreateUser(user *entity.RegistrationPayload, hashPassword str
 	row := r.db.QueryRowx(statement, user.Name, user.Email, hashPassword)
 
 	if err := row.Scan(&id); err != nil {
-		fmt.Println("2", err)
 		return "", err
 	}
 
