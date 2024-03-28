@@ -6,6 +6,7 @@ import (
 
 	awsCfg "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
 	"github.com/ramadhan1445sprint/sprint_segokuning/config"
@@ -21,7 +22,7 @@ func (s *Server) RegisterRoute() {
 	registerHealthRoute(mainRoute, s.db)
 	registerImageRoute(mainRoute)
 	registerUserRoute(mainRoute, s.db)
-	registerTransactionRoute(mainRoute, s.db)
+	registerTransactionRoute(mainRoute, s.db, s.validator)
 }
 
 func registerHealthRoute(r fiber.Router, db *sqlx.DB) {
@@ -39,11 +40,14 @@ func registerUserRoute(r fiber.Router, db *sqlx.DB) {
 	newRoute(userGroup, "POST", "/login", ctr.Login)
 }
 
-func registerTransactionRoute(r fiber.Router, db *sqlx.DB) {
+func registerTransactionRoute(r fiber.Router, db *sqlx.DB, validate *validator.Validate) {
 	ctr := controller.NewTransactionCtr(svc.NewTransactionSvc(repo.NewTransactionRepo(db)))
+	balanceCtr := controller.NewBalanceController(svc.NewBalanceSvc(repo.NewBalanceRepo(db)), validate)
 
 	newRouteWithAuth(r, "POST", "/transaction", ctr.AddTransaction)
+	newRouteWithAuth(r, "POST", "/balance", balanceCtr.AddBalance)
 	newRouteWithAuth(r, "GET", "/balance", ctr.GetBalance)
+	newRouteWithAuth(r, "GET", "/balance/history", balanceCtr.GetTransactionHistory)
 }
 
 func registerImageRoute(r fiber.Router) {

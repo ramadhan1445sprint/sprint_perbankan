@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -8,7 +9,10 @@ import (
 	"github.com/ramadhan1445sprint/sprint_segokuning/entity"
 )
 
-type BalanceRepo interface{}
+type BalanceRepo interface{
+	AddBankAccountBalance(bank *entity.BankAccountBalance, transaction *entity.BalanceTransaction) error
+	GetBalanceHistory(userId string, filter entity.BalanceHistoryMeta) ([]entity.BalanceHistoryData, error)
+}
 
 type balanceRepo struct {
 	db *sqlx.DB
@@ -20,50 +24,39 @@ func NewBalanceRepo(db *sqlx.DB) BalanceRepo {
 	}
 }
 
-func (r *balanceRepo) CheckBankAccount(userId string, currency string) (bool, error) {
+func (r *balanceRepo) AddBankAccountBalance(bank *entity.BankAccountBalance, transaction *entity.BalanceTransaction) error {
+	tx, err := r.db.BeginTx(context.Background(), nil)
+
+	defer tx.Rollback()
+
 	var exist int
+	var query string
 
-	err := r.db.Get(&exist, "SELECT count(*) from bank_accounts where user_id = $1 and currency = $2", userId, currency)
-
-	if err != nil {
-		return false, err
+	if err = tx.QueryRow("SELECT count(*) from bank_accounts where user_id = $1 and currency = $2", bank.UserID, bank.Currency).Scan(&exist); err != nil {
+		return err
 	}
 
 	if exist > 0 {
-		return true, nil
+		query = "UPDATE bank_accounts SET total_balance = total_balance + $1 WHERE user_id = $2 and currency = $3"
+	}else {
+		query = "INSERT INTO bank_accounts (total_balance, user_id, currency) VALUES ($1, $2, $3)"
 	}
 
-	return false, nil
-}
-
-func (r *balanceRepo) AddNewBankAccountBalance(bank *entity.BankAccountBalance, transaction entity.BalanceTransaction) error {
-	_, err := r.db.Exec("INSERT INTO bank_accounts (user_id, currency, total_balance) VALUES ($1, $2, $3)", bank.UserID, bank.Currency, bank.TotalBalance)
+	_, err = tx.Exec(query, bank.TotalBalance, bank.UserID, bank.Currency)
 
 	if err != nil {
 		return err
 	}
 
-	_, err = r.db.Exec("INSERT INTO transaction (user_id, account_name, account_number, currency, balance, image_url) VALUES ($1, $2, $3, $4, $5, $6)", transaction.UserID, transaction.BankName, transaction.AccountNumber, transaction.BankName, transaction.Currency, transaction.Balance, transaction.ImageUrl)
+	_, err = tx.Exec("INSERT INTO transactions (user_id, account_name, account_number, currency, balance, image_url) VALUES ($1, $2, $3, $4, $5, $6)", transaction.UserID, transaction.BankName, transaction.AccountNumber, transaction.Currency, transaction.Balance, transaction.ImageUrl)
 
 	if err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func (r *balanceRepo) UpdateBankAccountBalance(bank *entity.BankAccountBalance, transaction *entity.BalanceTransaction) error {
-	_, err := r.db.Exec("UPDATE bank_accounts (total_balance) SET total_balance = total_balance + $1 WHERE user_id = $2 and currency = $3", bank.TotalBalance, bank.UserID, bank.Currency)
-
-	if err != nil {
-		return err
-	}
-
-	_, err = r.db.Exec("INSERT INTO transaction (user_id, account_name, account_number, currency, balance, image_url) VALUES ($1, $2, $3, $4, $5, $6)", transaction.UserID, transaction.BankName, transaction.AccountNumber, transaction.BankName, transaction.Currency, transaction.Balance, transaction.ImageUrl)
-
-	if err != nil {
-		return err
-	}
+	if err = tx.Commit(); err != nil {
+        return err
+    }
 
 	return nil
 }
@@ -80,7 +73,7 @@ func (r *balanceRepo) GetBalanceHistory(userId string, filter entity.BalanceHist
 			account_name
 			from transactions 
 			WHERE user_id = $1
-			ORDER BY created_at DESC limit %d offset %d"
+			ORDER BY created_at DESC limit %d offset %d
 	`
 	query = fmt.Sprintf(query, filter.Limit, filter.Offset)
 
