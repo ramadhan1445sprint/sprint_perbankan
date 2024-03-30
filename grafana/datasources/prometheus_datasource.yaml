@@ -1,0 +1,15 @@
+# Configuration file version
+apiVersion: 1
+
+datasources:
+  - name: prometheus-main
+    type: prometheus
+    isDefault: true
+    access: proxy
+    orgId: 1
+    url: http://host.docker.internal:9090
+    jsonData: {}
+    secureJsonData: {}
+    updateIntervalSeconds: 5
+    version: 1
+    editable: false
