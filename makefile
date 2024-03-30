@@ -47,7 +47,7 @@ rollback-dev:
 
 run:
 	@echo "Running the application..."
-	go run cmd/main.go
+	go run main.go
 
 runDockerCompose:
 	@echo "Running the application with docker-compose..."
@@ -60,7 +60,7 @@ runDockerComposeBuildBackendService:
 resetGrafana:
 	@echo "Resetting Grafana..."
 	docker-compose rm -f grafana
-	docker volume rm -f grafana_data
+	docker volume rm -f prometheusgrafanaexample_grafana_data
 
 runDb:
 	@echo "Creating database..."
