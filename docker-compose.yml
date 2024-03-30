@@ -22,7 +22,6 @@ services:
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
       S3_REGION: ${S3_REGION}
       ENV: ${ENV}
-
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -41,7 +40,6 @@ services:
       - "--storage.tsdb.path=/prometheus"
       # tell prometheus to reload if we hit `http://localhost:9090/-/reload` to reload changes in `./prometheus.yml`
       - "--web.enable-lifecycle"
-
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -58,22 +56,6 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_PASSWORD=root
-      - PGDATA=/var/lib/postgresql/data
-      - LANG=en_US.utf8
-    volumes:
-      - /var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    hostname: ${DB_HOST}
-    restart: no
-    labels:
-      - desktop.docker.io/wsl-distro=Ubuntu-20.04
-    command: ["postgres"]
 
 volumes:
   prometheus_data:

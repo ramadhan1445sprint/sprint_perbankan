@@ -1,5 +1,5 @@
 # Step 1: Build the binary
-FROM golang:1.22.1 as builder
+FROM golang:1.22 as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -8,10 +8,10 @@ WORKDIR /app
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o main ./main.go
 
 # Step 2: Use a minimal base image to run the application
-FROM alpine:latest  
+FROM alpine:3.19  
 
 RUN apk --no-cache add ca-certificates
 
