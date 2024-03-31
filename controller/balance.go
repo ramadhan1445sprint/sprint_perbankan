@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -12,13 +13,13 @@ import (
 )
 
 type BalanceController struct {
-	svc svc.BalanceSvc
+	svc      svc.BalanceSvc
 	validate *validator.Validate
 }
 
 func NewBalanceController(svc svc.BalanceSvc, validate *validator.Validate) *BalanceController {
 	return &BalanceController{
-		svc: svc,
+		svc:      svc,
 		validate: validate,
 	}
 }
@@ -40,6 +41,15 @@ func (c *BalanceController) AddBalance(ctx *fiber.Ctx) error {
 		}
 	}
 
+	pattern := `^https://[^/]+\.s3\.[^/]+\.amazonaws\.com/.+\.(?:jpg|jpeg)$`
+
+	regex := regexp.MustCompile(pattern)
+
+	if !regex.MatchString(balanceReq.TransferProofImg) {
+		custErr := customErr.NewBadRequestError("wrong image")
+		return ctx.Status(custErr.StatusCode).JSON(fiber.Map{"message": custErr.Message})
+	}
+		
 	balanceReq.UserID = userId
 
 	if err := c.svc.AddBankAccountBalance(balanceReq); err != nil {
@@ -61,7 +71,7 @@ func (c *BalanceController) GetTransactionHistory(ctx *fiber.Ctx) error {
 		fmt.Println(offset)
 		filterReq.Limit = 5
 		filterReq.Offset = 0
-	}else {
+	} else {
 		custErr := customErr.NewBadRequestError("invalid query param")
 		return ctx.Status(custErr.StatusCode).JSON(fiber.Map{"message": custErr.Message})
 	}

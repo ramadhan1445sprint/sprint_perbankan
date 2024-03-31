@@ -102,6 +102,9 @@ func (r *balanceRepo) GetBalanceHistory(userId string, filter entity.BalanceHist
 		}
 
 		tempData.ID = tempRawData.ID
+		if tempRawData.Balance < 0 {
+			tempRawData.Balance *= -1
+		}
 		tempData.Balance = tempRawData.Balance
 		tempData.Currency = tempRawData.Currency
 		tempData.TransferProofImg = tempRawData.TransferProofImg
