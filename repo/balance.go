@@ -97,9 +97,9 @@ func (r *balanceRepo) GetBalanceHistory(userId string, filter entity.BalanceHist
 		tempSourceData.AccountNumber = tempRawData.AccountNumber
 		tempSourceData.BankName = tempRawData.BankName
 
-		if tempRawData.Balance < 0 {
-			tempRawData.Balance = tempRawData.Balance * (-1)
-		}
+		// if tempRawData.Balance < 0 {
+		// 	tempRawData.Balance = tempRawData.Balance * (-1)
+		// }
 
 		tempData.ID = tempRawData.ID
 		tempData.Balance = tempRawData.Balance
