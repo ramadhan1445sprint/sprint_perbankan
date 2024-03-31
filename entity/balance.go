@@ -55,9 +55,9 @@ type BalanceHistoryDataResponse struct {
 
 type AddBalanceRequest struct {
 	UserID        string `json:"userId"`
-	AccountNumber  string  `json:"senderBankAccountNumber" validate:"required,min=5,max=30"`
+	AccountNumber  string  `json:"senderBankAccountNumber" validate:"required,min=5,max=50"`
 	BankName       string  `json:"senderBankName" validate:"required,min=5,max=30"`
-	Balance        int      `json:"addedBalance" validate:"required,min=1"`
-	Currency       string   `json:"currency" validate:"required,iso4217"`
+	Currency       string   `json:"currency" validate:"required,min=1,max=3"`
 	TransferProofImg  string `json:"transferProofImg" validate:"required,url"`
+	Balance        int      `json:"addedBalance" validate:"required,min=1"`
 }
