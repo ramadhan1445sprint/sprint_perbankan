@@ -22,7 +22,7 @@ type BankAccount struct {
 
 type ListBalance struct {
 	Currency     string `db:"currency"`
-	TotalBalance int    `db:"total_balance"`
+	TotalBalance int    `db:"total_balance" json:"balance"`
 }
 
 func (p *TransactionPayload) Validate() error {

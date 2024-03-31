@@ -39,12 +39,21 @@ func (c *UserController) Register(ctx *fiber.Ctx) error {
 }
 
 func (c *UserController) Login(ctx *fiber.Ctx) error {
-	var user entity.Credential
+	var user entity.RegistrationPayload
 	if err := ctx.BodyParser(&user); err != nil {
 		return customErr.NewBadRequestError(err.Error())
 	}
 
-	name, accessToken, err := c.svc.Login(user)
+	if user.Name == "null" || user.Name == "" {
+		return customErr.NewBadRequestError("name not exist")
+	}
+
+	loginPayload := entity.Credential{
+		Email:    user.Email,
+		Password: user.Password,
+	}
+
+	name, accessToken, err := c.svc.Login(loginPayload)
 	if err != nil {
 		return err
 	}
@@ -55,7 +64,7 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 		"accessToken": accessToken,
 	}
 
-	return ctx.Status(201).JSON(fiber.Map{
+	return ctx.Status(200).JSON(fiber.Map{
 		"message": "User registered successfully",
 		"data":    respData,
 	})
