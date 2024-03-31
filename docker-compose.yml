@@ -6,6 +6,10 @@ services:
       dockerfile: dockerfiles/backend/Dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - /home/ubuntu/ap-southeast-1-bundle.pem:/home/ubuntu/ap-southeast-1-bundle.pem
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       # ⚠️ not a good production practice, because hacker can snoop the docker env within the docker container
       # but we need it for our demonstration
@@ -26,6 +30,8 @@ services:
     image: prom/prometheus:latest
     ports:
       - "9090:9090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       # • `./prometheus.yml` refers to `./prometheus.yml` that exists in current directory
@@ -44,6 +50,8 @@ services:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - grafana_data:/var/lib/grafana
       # • `grafana_data` refers to `volumes.grafana_data` used to make grafana information presists each restart
