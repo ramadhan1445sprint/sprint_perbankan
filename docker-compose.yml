@@ -48,7 +48,7 @@ services:
       - grafana_data:/var/lib/grafana
       # • `grafana_data` refers to `volumes.grafana_data` used to make grafana information presists each restart
       # •  `/var/lib/grafana` refers to where should `volumes.grafana_data` will be placed inside the grafana container
-      - ./grafana-configs:/etc/grafana/provisioning:ro
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
       # • `./grafana-configs` refers to `grafana-configs` folder in host, push the folder in the repository
       #    to retain the config and keeping the panels that already created and deploy it everywhere
       # • `/etc/grafana/provisioning` refers to where should `grafana-configs` will be placed inside the grafana container
