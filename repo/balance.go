@@ -9,7 +9,7 @@ import (
 	"github.com/ramadhan1445sprint/sprint_segokuning/entity"
 )
 
-type BalanceRepo interface{
+type BalanceRepo interface {
 	AddBankAccountBalance(bank *entity.BankAccountBalance, transaction *entity.BalanceTransaction) error
 	GetBalanceHistory(userId string, filter entity.BalanceHistoryMeta) ([]entity.BalanceHistoryData, error)
 }
@@ -38,7 +38,7 @@ func (r *balanceRepo) AddBankAccountBalance(bank *entity.BankAccountBalance, tra
 
 	if exist > 0 {
 		query = "UPDATE bank_accounts SET total_balance = total_balance + $1 WHERE user_id = $2 and currency = $3"
-	}else {
+	} else {
 		query = "INSERT INTO bank_accounts (total_balance, user_id, currency) VALUES ($1, $2, $3)"
 	}
 
@@ -55,8 +55,8 @@ func (r *balanceRepo) AddBankAccountBalance(bank *entity.BankAccountBalance, tra
 	}
 
 	if err = tx.Commit(); err != nil {
-        return err
-    }
+		return err
+	}
 
 	return nil
 }
@@ -96,6 +96,10 @@ func (r *balanceRepo) GetBalanceHistory(userId string, filter entity.BalanceHist
 
 		tempSourceData.AccountNumber = tempRawData.AccountNumber
 		tempSourceData.BankName = tempRawData.BankName
+
+		if tempRawData.Balance < 0 {
+			tempRawData.Balance = tempRawData.Balance * (-1)
+		}
 
 		tempData.ID = tempRawData.ID
 		tempData.Balance = tempRawData.Balance
