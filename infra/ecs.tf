@@ -25,16 +25,16 @@ resource "aws_ecs_task_definition" "web_backend_task" {
       ]
       environment = [
         { "name" : "DB_HOST", "value" : "${var.db_host}" },
-        { "name" : "DB_USER", "value" : "${var.db_user}" },
+        { "name" : "DB_USERNAME", "value" : "${var.db_username}" },
         { "name" : "DB_NAME", "value" : "${var.db_name}" },
-        { "name" : "DB_PASS", "value" : "${var.db_pass}" },
+        { "name" : "DB_PASSWORD", "value" : "${var.db_password}" },
         { "name" : "DB_PORT", "value" : "${var.db_port}" },
         { "name" : "DB_PARAMS", "value" : "${var.db_params}" },
         { "name" : "BCRYPT_SALT", "value" : "${var.bcrypt_salt}" },
         { "name" : "JWT_SECRET", "value" : "${var.jwt_secret}" },
         { "name" : "S3_ID", "value" : "${var.s3_id}" },
         { "name" : "S3_SECRET", "value" : "${var.s3_secret}" },
-        { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket}" },
+        { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket_name}" },
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
     }
