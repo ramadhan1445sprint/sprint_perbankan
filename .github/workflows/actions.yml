@@ -83,7 +83,7 @@ jobs:
           echo "bcrypt_salt=\"${{ secrets.BCRYPT_SALT }}\"" >> var.tfvars
           echo "jwt_secret=\"${{ secrets.JWT_SECRET }}\"" >> var.tfvars
           echo "s3_id=\"${{ secrets.S3_ID }}\"" >> var.tfvars
-          echo "s3_secret=\"${{ secrets.S3_SECRET }}\"" >> var.tfvars
+          echo "s3_secret=\"${{ secrets.S3_SECRET_KEY }}\"" >> var.tfvars
           echo "s3_bucket=\"${{ vars.S3_BUCKET }}\"" >> var.tfvars
 
       - name: Run Terraform
