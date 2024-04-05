@@ -32,7 +32,7 @@ jobs:
         id: build-tag-push
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPO: ecs_go_pg
+          REPO: paimon_bank_ilhamnyto
           TAG: ${{ github.sha }}
         run: |
           echo "container_url=$(echo $REGISTRY)/$(echo $REPO):$(echo $TAG)" >> $GITHUB_ENV
