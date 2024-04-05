@@ -58,7 +58,7 @@ variable "s3_id" {
   sensitive = true
 }
 
-variable "s3_key" {
+variable "s3_secret" {
   type = string
   sensitive = true
 }

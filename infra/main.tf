@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "s3" {
-    key            = var.s3_key
-    bucket         = var.s3_bucket
+    key            = "project_sprint/paimon_bank/terraform.tfstate"
+    bucket         = "remote-state-tf-1523"
     region         = "ap-southeast-1"
     dynamodb_table = "tf-locks-table"
     encrypt        = true
