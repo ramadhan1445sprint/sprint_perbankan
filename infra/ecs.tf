@@ -37,15 +37,6 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket}" },
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-create-group  = "true"
-          awslogs-group         = "/ecs/web_backend_task"
-          awslogs-region        = "ap-southeast-1"
-          awslogs-stream-prefix = "ecs"
-        }
-      }
     }
   ])
 }
