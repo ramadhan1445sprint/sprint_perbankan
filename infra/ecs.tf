@@ -1,11 +1,11 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "tf_ilham_paimonbank_go_pg"
+  name = "ilhamnyto_paimon_bank"
 }
 
 resource "aws_ecs_task_definition" "web_backend_task" {
   cpu                      = 1024
   memory                   = 4096
-  family                   = "web_backend_task"
+  family                   = "ilhamnyto_task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = var.ecs_exec_role_arn
@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
 }
 
 resource "aws_ecs_service" "web_backend_service" {
-  name            = "web_backend_service"
+  name            = "ilhamnyto_service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.web_backend_task.arn
   desired_count   = 1
