@@ -14,11 +14,11 @@ variable "db_host" {
   type = string
 }
 
-variable "db_user" {
+variable "db_username" {
   type = string
 }
 
-variable "db_pass" {
+variable "db_password" {
   type = string
   sensitive = true
 }
@@ -49,7 +49,7 @@ variable "ecs_exec_role_arn" {
   type = string
 }
 
-variable "s3_bucket" {
+variable "s3_bucket_name" {
   type = string
 }
 
