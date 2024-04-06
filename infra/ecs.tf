@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         { "name" : "BCRYPT_SALT", "value" : "${var.bcrypt_salt}" },
         { "name" : "JWT_SECRET", "value" : "${var.jwt_secret}" },
         { "name" : "S3_ID", "value" : "${var.s3_id}" },
-        { "name" : "S3_SECRET", "value" : "${var.s3_secret}" },
+        { "name" : "S3_SECRET_KEY", "value" : "${var.s3_secret}" },
         { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket_name}" },
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
