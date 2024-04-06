@@ -29,3 +29,7 @@ go.work
 # binary
 main
 main_ilhamnyto
+
+# Infra
+*.terraform
+*.lock.hcl
