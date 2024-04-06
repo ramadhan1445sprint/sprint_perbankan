@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    key            = "project_sprint/paimon_bank/terraform.tfstate"
+    key            = "project_sprint/paimonbank/terraform.tfstate"
     bucket         = "remote-state-tf-1523"
     region         = "ap-southeast-1"
     dynamodb_table = "tf-locks-table"
