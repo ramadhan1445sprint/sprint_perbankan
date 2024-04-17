@@ -36,7 +36,29 @@ jobs:
           TAG: ${{ github.sha }}
         run: |
           echo "container_url=$(echo $REGISTRY)/$(echo $REPO):$(echo $TAG)" >> $GITHUB_ENV
-          docker build -t $REGISTRY/$REPO:$TAG .
+          docker build -t $REGISTRY/$REPO:$TAG --file ./dockerfiles/backend/Dockerfile .
+          docker push $REGISTRY/$REPO:$TAG
+
+      - name: Build and push Prometheus Docker image
+        id: build-image-prometheus
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPO: paimon_bank_ilhamnyto_prometheus
+          TAG: ${{ github.sha }}
+        run: |
+          echo "prometheus_container_url=$(echo $REGISTRY)/$(echo $REPO):$(echo $TAG)" >> $GITHUB_ENV
+          docker build -t $REGISTRY/$REPO:$TAG --file ./dockerfiles/prometheus/Dockerfile .
+          docker push $REGISTRY/$REPO:$TAG
+
+      - name: Build and push Grafana Docker Image
+        id: build-image-grafana
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPO: paimon_bank_ilhamnyto_grafana
+          TAG: ${{ github.sha }}
+        run: |
+          echo "grafana_container_url=$(echo $REGISTRY)/$(echo $REPO):$(echo $TAG)" >> $GITHUB_ENV
+          docker build -t $REGISTRY/$REPO:$TAG --file ./dockerfiles/grafana/Dockerfile .
           docker push $REGISTRY/$REPO:$TAG
 
       - name: Setup Go
@@ -71,6 +93,8 @@ jobs:
           echo "sg_id=\"${{ vars.SG_ID }}\"" >> var.tfvars
           echo "subnet_ids=${{ vars.SUBNET_IDS }}" >> var.tfvars
           echo "docker_image_url=\"$(echo $container_url)\"" >> var.tfvars
+          echo "docker_image_url_prometheus=\"$(echo $prometheus_container_url)\"" >> var.tfvars
+          echo "docker_image_url_grafana=\"$(echo $grafana_container_url)\"" >> var.tfvars
           echo "db_host=\"${{ vars.DB_HOST }}\"" >> var.tfvars
           echo "db_username=\"${{ secrets.DB_USER }}\"" >> var.tfvars
           echo "db_password=\"${{ secrets.DB_PASS }}\"" >> var.tfvars

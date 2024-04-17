@@ -2,6 +2,10 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = "ilhamnyto_paimon_bank"
 }
 
+data "aws_ecs_cluster" "ecs_cluster" {
+  cluster_name = "ilhamnyto_paimon_bank"
+}
+
 resource "aws_ecs_task_definition" "web_backend_task" {
   cpu                      = 1024
   memory                   = 4096
@@ -37,6 +41,60 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket_name}" },
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
+      logConfiguration = {
+				logDriver = "awslogs"
+				options = {
+          "awslogs-create-group"  = "true"
+					"awslogs-group"         = "/ecs/web_backend_task"
+					"awslogs-region"        = "ap-southeast-1"
+					"awslogs-stream-prefix" = "ecs"
+				}
+			}
+    },
+    {
+      name      = "prometheus"
+      image     = var.docker_image_url_prometheus
+      cpu       = 1024
+      memory    = 3072
+      essential = false
+      portMappings = [
+        {
+          containerPort = 9090
+          hostPort      = 9090
+          protocol      = "tcp"
+        }
+      ]
+      logConfiguration = {
+				logDriver = "awslogs"
+				options = {
+          "awslogs-create-group"  = "true"
+					"awslogs-group"         = "/ecs/web_backend_task"
+					"awslogs-region"        = "ap-southeast-1"
+					"awslogs-stream-prefix" = "ecs"
+				}
+			}
+    },
+    {
+      name      = "grafana"
+      image     = var.docker_image_url_grafana
+      cpu       = 1024
+      memory    = 3072
+      essential = false
+      portMappings = [
+        {
+          containerPort = 3000
+          hostPort      = 3000
+        }
+      ]
+      logConfiguration = {
+				logDriver = "awslogs"
+				options = {
+          "awslogs-create-group"  = "true"
+					"awslogs-group"         = "/ecs/web_backend_task"
+					"awslogs-region"        = "ap-southeast-1"
+					"awslogs-stream-prefix" = "ecs"
+				}
+			}
     }
   ])
 }
@@ -53,4 +111,35 @@ resource "aws_ecs_service" "web_backend_service" {
     security_groups  = [var.sg_id]
     assign_public_ip = true
   }
+
+  load_balancer {
+		target_group_arn = aws_lb_target_group.backend_tg.arn
+		container_name   = var.docker_image_url
+		container_port   = 8080
+	}
+}
+
+resource "aws_lb" "backend_lb" {
+	name               = "backend_lb"
+	internal           = false
+	subnets            = var.subnet_ids
+	security_groups    = [var.sg_id]
+	load_balancer_type = "application"
+}
+
+resource "aws_lb_target_group" "backend_tg" {
+	name        = "backend_tg"
+	port        = 8080
+	protocol    = "HTTP"
+	vpc_id      = data.aws_ecs_cluster.ecs_cluster.vpc_config[0].vpc_id
+	target_type = "ip"
+}
+
+resource "aws_lb_listener" "nginx_listener" {
+	load_balancer_arn = aws_lb.backend_lb.arn
+	port              = "8080"
+	default_action {
+		type             = "forward"
+		target_group_arn = aws_lb_target_group.backend_tg.arn
+	}
 }

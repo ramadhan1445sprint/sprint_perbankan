@@ -10,6 +10,14 @@ variable "docker_image_url" {
   type = string
 }
 
+variable "docker_image_url_prometheus" {
+  type = string
+}
+
+variable "docker_image_url_grafana" {
+  type = string
+}
+
 variable "db_host" {
   type = string
 }

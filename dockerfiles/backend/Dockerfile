@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o main ./main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o main ./main.go
 
 # Step 2: Use a minimal base image to run the application
 FROM alpine:3.19  
@@ -19,6 +19,9 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
+
+# Copy PEM File
+COPY ./ap-southeast-1-bundle.pem .
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
