@@ -41,15 +41,6 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         { "name" : "S3_BUCKET_NAME", "value" : "${var.s3_bucket_name}" },
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          "awslogs-create-group"  = "true"
-          "awslogs-group"         = "/ecs/web_backend_task"
-          "awslogs-region"        = "ap-southeast-1"
-          "awslogs-stream-prefix" = "ecs"
-        }
-      }
     },
     {
       name      = "paimon_bank_ilhamnyto_prometheus"
@@ -68,7 +59,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         logDriver = "awslogs"
         options = {
           "awslogs-create-group"  = "true"
-          "awslogs-group"         = "/ecs/web_backend_task"
+          "awslogs-group"         = "/ecs/ilhamnyto_paimon_bank"
           "awslogs-region"        = "ap-southeast-1"
           "awslogs-stream-prefix" = "ecs"
         }
@@ -90,7 +81,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         logDriver = "awslogs"
         options = {
           "awslogs-create-group"  = "true"
-          "awslogs-group"         = "/ecs/web_backend_task"
+          "awslogs-group"         = "/ecs/ilhamnyto_paimon_bank"
           "awslogs-region"        = "ap-southeast-1"
           "awslogs-stream-prefix" = "ecs"
         }
@@ -103,7 +94,7 @@ resource "aws_ecs_service" "web_backend_service" {
   name            = "ilhamnyto_service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.web_backend_task.arn
-  desired_count   = 5
+  desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
