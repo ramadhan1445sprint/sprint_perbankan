@@ -7,8 +7,8 @@ data "aws_ecs_cluster" "ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "web_backend_task" {
-  cpu                      = 1024
-  memory                   = 4096
+  cpu                      = 2048
+  memory                   = 6144
   family                   = "ilhamnyto_task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -54,8 +54,8 @@ resource "aws_ecs_task_definition" "web_backend_task" {
     {
       name      = "prometheus"
       image     = var.docker_image_url_prometheus
-      cpu       = 1024
-      memory    = 3072
+      cpu       = 512
+      memory    = 1024
       essential = false
       portMappings = [
         {
@@ -77,8 +77,8 @@ resource "aws_ecs_task_definition" "web_backend_task" {
     {
       name      = "grafana"
       image     = var.docker_image_url_grafana
-      cpu       = 1024
-      memory    = 3072
+      cpu       = 512
+      memory    = 1024
       essential = false
       portMappings = [
         {
