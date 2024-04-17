@@ -103,7 +103,7 @@ resource "aws_ecs_service" "web_backend_service" {
   name            = "ilhamnyto_service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.web_backend_task.arn
-  desired_count   = 1
+  desired_count   = 5
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -112,34 +112,34 @@ resource "aws_ecs_service" "web_backend_service" {
     assign_public_ip = true
   }
 
-  load_balancer {
-		target_group_arn = aws_lb_target_group.backend_tg.arn
-		container_name   = var.docker_image_url
-		container_port   = 8080
-	}
+  # load_balancer {
+	# 	target_group_arn = aws_lb_target_group.backend_tg.arn
+	# 	container_name   = var.docker_image_url
+	# 	container_port   = 8080
+	# }
 }
 
-resource "aws_lb" "backend_lb" {
-	name               = "backend-lb"
-	internal           = false
-	subnets            = var.subnet_ids
-	security_groups    = [var.sg_id]
-	load_balancer_type = "application"
-}
+# resource "aws_lb" "backend_lb" {
+# 	name               = "backend-lb"
+# 	internal           = false
+# 	subnets            = var.subnet_ids
+# 	security_groups    = [var.sg_id]
+# 	load_balancer_type = "application"
+# }
 
-resource "aws_lb_target_group" "backend_tg" {
-	name        = "backend-tg"
-	port        = 8080
-	protocol    = "HTTP"
-	vpc_id      = var.aws_vpc_id
-	target_type = "ip"
-}
+# resource "aws_lb_target_group" "backend_tg" {
+# 	name        = "backend-tg"
+# 	port        = 8080
+# 	protocol    = "HTTP"
+# 	vpc_id      = var.aws_vpc_id
+# 	target_type = "ip"
+# }
 
-resource "aws_lb_listener" "nginx_listener" {
-	load_balancer_arn = aws_lb.backend_lb.arn
-	port              = "8080"
-	default_action {
-		type             = "forward"
-		target_group_arn = aws_lb_target_group.backend_tg.arn
-	}
-}
+# resource "aws_lb_listener" "backend_listener" {
+# 	load_balancer_arn = aws_lb.backend_lb.arn
+# 	port              = "8080"
+# 	default_action {
+# 		type             = "forward"
+# 		target_group_arn = aws_lb_target_group.backend_tg.arn
+# 	}
+# }
