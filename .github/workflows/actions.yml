@@ -101,6 +101,7 @@ jobs:
           echo "db_port=\"${{ vars.DB_PORT }}\"" >> var.tfvars
           echo "db_name=\"${{ vars.DB_NAME }}\"" >> var.tfvars
           echo "db_params=\"${{ vars.DB_PARAMS }}\"" >> var.tfvars
+          echo "aws_vpc_id=\"${{ secrets.AWS_VPC_ID }}\"" >> var.tfvars
           echo "ecs_ak_id=\"${{ secrets.AWS_AK_ID }}\"" >> var.tfvars
           echo "ecs_ak_secret=\"${{ secrets.AWS_AK_SECRET }}\"" >> var.tfvars
           echo "ecs_exec_role_arn=\"${{ vars.ECS_EXEC_ROLE_ARN }}\"" >> var.tfvars

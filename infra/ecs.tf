@@ -120,7 +120,7 @@ resource "aws_ecs_service" "web_backend_service" {
 }
 
 resource "aws_lb" "backend_lb" {
-	name               = "backend_lb"
+	name               = "backend-lb"
 	internal           = false
 	subnets            = var.subnet_ids
 	security_groups    = [var.sg_id]
@@ -128,10 +128,10 @@ resource "aws_lb" "backend_lb" {
 }
 
 resource "aws_lb_target_group" "backend_tg" {
-	name        = "backend_tg"
+	name        = "backend-tg"
 	port        = 8080
 	protocol    = "HTTP"
-	vpc_id      = data.aws_ecs_cluster.ecs_cluster.vpc_config[0].vpc_id
+	vpc_id      = var.aws_vpc_id
 	target_type = "ip"
 }
 

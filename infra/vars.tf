@@ -6,6 +6,10 @@ variable "subnet_ids" {
   type = list(string)
 }
 
+variable "aws_vpc_id" {
+  type = string
+}
+
 variable "docker_image_url" {
   type = string
 }
