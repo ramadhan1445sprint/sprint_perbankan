@@ -42,17 +42,17 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         { "name" : "S3_REGION", "value" : "ap-southeast-1" },
       ]
       logConfiguration = {
-				logDriver = "awslogs"
-				options = {
+        logDriver = "awslogs"
+        options = {
           "awslogs-create-group"  = "true"
-					"awslogs-group"         = "/ecs/web_backend_task"
-					"awslogs-region"        = "ap-southeast-1"
-					"awslogs-stream-prefix" = "ecs"
-				}
-			}
+          "awslogs-group"         = "/ecs/web_backend_task"
+          "awslogs-region"        = "ap-southeast-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     },
     {
-      name      = "prometheus"
+      name      = "paimon_bank_ilhamnyto_prometheus"
       image     = var.docker_image_url_prometheus
       cpu       = 512
       memory    = 1024
@@ -65,17 +65,17 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         }
       ]
       logConfiguration = {
-				logDriver = "awslogs"
-				options = {
+        logDriver = "awslogs"
+        options = {
           "awslogs-create-group"  = "true"
-					"awslogs-group"         = "/ecs/web_backend_task"
-					"awslogs-region"        = "ap-southeast-1"
-					"awslogs-stream-prefix" = "ecs"
-				}
-			}
+          "awslogs-group"         = "/ecs/web_backend_task"
+          "awslogs-region"        = "ap-southeast-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     },
     {
-      name      = "grafana"
+      name      = "paimon_bank_ilhamnyto_grafana"
       image     = var.docker_image_url_grafana
       cpu       = 512
       memory    = 1024
@@ -87,14 +87,14 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         }
       ]
       logConfiguration = {
-				logDriver = "awslogs"
-				options = {
+        logDriver = "awslogs"
+        options = {
           "awslogs-create-group"  = "true"
-					"awslogs-group"         = "/ecs/web_backend_task"
-					"awslogs-region"        = "ap-southeast-1"
-					"awslogs-stream-prefix" = "ecs"
-				}
-			}
+          "awslogs-group"         = "/ecs/web_backend_task"
+          "awslogs-region"        = "ap-southeast-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 }
@@ -113,10 +113,10 @@ resource "aws_ecs_service" "web_backend_service" {
   }
 
   # load_balancer {
-	# 	target_group_arn = aws_lb_target_group.backend_tg.arn
-	# 	container_name   = var.docker_image_url
-	# 	container_port   = 8080
-	# }
+  # 	target_group_arn = aws_lb_target_group.backend_tg.arn
+  # 	container_name   = var.docker_image_url
+  # 	container_port   = 8080
+  # }
 }
 
 # resource "aws_lb" "backend_lb" {
