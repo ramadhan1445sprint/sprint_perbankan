@@ -59,7 +59,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         logDriver = "awslogs"
         options = {
           "awslogs-create-group"  = "true"
-          "awslogs-group"         = "/ecs/ilhamnyto_paimon_bank"
+          "awslogs-group"         = "/ecs/web_backend_service"
           "awslogs-region"        = "ap-southeast-1"
           "awslogs-stream-prefix" = "ecs"
         }
@@ -81,7 +81,7 @@ resource "aws_ecs_task_definition" "web_backend_task" {
         logDriver = "awslogs"
         options = {
           "awslogs-create-group"  = "true"
-          "awslogs-group"         = "/ecs/ilhamnyto_paimon_bank"
+          "awslogs-group"         = "/ecs/web_backend_service"
           "awslogs-region"        = "ap-southeast-1"
           "awslogs-stream-prefix" = "ecs"
         }
