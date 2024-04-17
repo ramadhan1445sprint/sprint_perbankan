@@ -2,8 +2,8 @@
 FROM grafana/grafana:latest
 
 # Copy provisioning files
-COPY ./grafana-configs/dashboards/main.yml /etc/grafana/provisioning/dashboards
-COPY ./grafana-configs/datasources/prometheus_datasource.yaml /etc/grafana/provisioning/datasources/prometheus_datasource.yaml
+COPY ./grafana/dashboards/main.yml /etc/grafana/provisioning/dashboards
+COPY ./grafana/datasources/prometheus_datasource.yaml /etc/grafana/provisioning/datasources/prometheus_datasource.yaml
 COPY ./grafana/dashboards/dashboard-perbankan-1711812579563.json /etc/grafana/main-dashboards/dashboard-perbankan-1711812579563.json
 
 ENV GF_SECURITY_ADMIN_PASSWORD=admin
