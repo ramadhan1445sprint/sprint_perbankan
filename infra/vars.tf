@@ -31,7 +31,7 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -48,12 +48,12 @@ variable "db_params" {
 }
 
 variable "ecs_ak_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "ecs_ak_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -66,21 +66,25 @@ variable "s3_bucket_name" {
 }
 
 variable "s3_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "s3_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "bcrypt_salt" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "jwt_secret" {
-  type = string
+  type      = string
   sensitive = true
+}
+
+variable "logs_group" {
+  default = "/ecs/web_backend_task"
 }
